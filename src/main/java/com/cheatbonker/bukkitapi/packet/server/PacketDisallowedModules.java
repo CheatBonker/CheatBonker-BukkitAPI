@@ -30,7 +30,10 @@ public class PacketDisallowedModules extends Packet {
     public void write() {
         //packet id
         this.buf.writeInt(2);
-        //int array of disallowed modules
-        this.writeIntArray(this.disallowedModulesIds);
+        //list of disallowed modules ids
+        this.buf.writeInt(disallowedModulesIds.length);
+        for (int i : this.disallowedModulesIds) {
+            this.buf.writeInt(i);
+        }
     }
 }

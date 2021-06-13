@@ -11,6 +11,7 @@ public final class CheatBonkerBukkitAPI extends JavaPlugin {
         getServer().getPluginCommand("waypointtest").setExecutor(new WaypointTestCommand());
         getServer().getPluginCommand("waypointremovetest").setExecutor(new WaypointRemoveTestCommand());
         getServer().getPluginCommand("staffmodulestest").setExecutor(new StaffModulesTestCommand());
+        getServer().getPluginCommand("disallowedmodulestest").setExecutor(new DisallowedModulesTestCommand());
     }
 
     @Override
