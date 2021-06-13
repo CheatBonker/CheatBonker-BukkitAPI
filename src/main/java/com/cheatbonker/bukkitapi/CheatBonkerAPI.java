@@ -1,5 +1,6 @@
 package com.cheatbonker.bukkitapi;
 
+import com.cheatbonker.bukkitapi.dimension.Dimension;
 import com.cheatbonker.bukkitapi.module.CheatBonkerModule;
 import com.cheatbonker.bukkitapi.packet.Packet;
 import com.cheatbonker.bukkitapi.packet.server.PacketAddWaypoint;
@@ -20,17 +21,18 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.messaging.Messenger;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class CheatBonkerAPI implements Listener {
+    //list of players running cheatbonker
     private final List<User> playersRunningCheatBonker;
+    //plugin instance, used when sending packets to the player
     private final Plugin plugin;
+    //handles all incoming packets
     public CBNetHandler netHandler;
 
+    //initialize crap and register plugin channel and events
     public CheatBonkerAPI(Plugin plugin) {
         this.netHandler = new CBNetHandler();
         this.playersRunningCheatBonker = new ArrayList<>();
@@ -65,37 +67,86 @@ public class CheatBonkerAPI implements Listener {
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    public void setDisallowedModules(Player player, CheatBonkerModule... modulesToDisable) {
+    public boolean setDisallowedModules(Player player, CheatBonkerModule... modulesToDisable) {
+        User user = this.getUserFromPlayer(player);
+        if (user == null) {
+            System.err.println("Couldn't change " + player.getName() + "'s disabled modules because they aren't using CheatBonker");
+            return false;
+        }
+        //cba to google how to turn this into a list
+        user.disallowedModules = Arrays.stream(modulesToDisable).collect(Collectors.toList());
+
         this.sendPacket(new PacketDisallowedModules(modulesToDisable), player);
+        return true;
     }
 
-    public void setDisallowedModules(Player player, List<CheatBonkerModule> modulesToDisable) {
+    public boolean setDisallowedModules(Player player, List<CheatBonkerModule> modulesToDisable) {
+        User user = this.getUserFromPlayer(player);
+        if (user == null) {
+            System.err.println("Couldn't change " + player.getName() + "'s disabled modules because they aren't using CheatBonker");
+            return false;
+        }
+
+        user.disallowedModules = modulesToDisable;
         this.sendPacket(new PacketDisallowedModules(modulesToDisable), player);
+        return true;
     }
 
-    public void setStaffModulesStatus(Player player, boolean status) {
+    public boolean setStaffModulesStatus(Player player, boolean status) {
+        User user = this.getUserFromPlayer(player);
+        if (user == null) {
+            System.err.println("Couldn't change " + player.getName() + "'s staff modules status because they aren't using CheatBonker");
+            return false;
+        }
+
+        user.staffModulesStatus = status;
         this.sendPacket(new PacketStaffModulesStatus(status), player);
+        return true;
     }
 
-    /**
-     * Sends a waypoint packet to the specified player
-     * @param playerToAddWaypoint to send the waypoint packet
-     * @param waypoint instance of Waypoint, a class that contains all waypoint information
-     */
-    public void addWaypoint(Player playerToAddWaypoint, Waypoint waypoint) {
+    public boolean addWaypoint(Player playerToAddWaypoint, Waypoint waypoint) {
+        User user = this.getUserFromPlayer(playerToAddWaypoint);
+        if (user == null) {
+            System.err.println("Couldn't add a waypoint to " + playerToAddWaypoint.getName() + " because they aren't using CheatBonker");
+            return false;
+        }
+
+        user.waypointsList.add(waypoint);
         this.sendPacket(new PacketAddWaypoint(waypoint), playerToAddWaypoint);
+        return true;
     }
 
-    //gets removed by waypoint name
-    public void removeWaypoint(Player playerToRemoveWaypoint, Waypoint waypointToRemove) {
+    public boolean removeWaypoint(Player playerToRemoveWaypoint, Waypoint waypointToRemove) {
+        User user = this.getUserFromPlayer(playerToRemoveWaypoint);
+        if (user == null) {
+            System.err.println("Couldn't remove a waypoint from " + playerToRemoveWaypoint.getName() + " because they aren't using CheatBonker");
+            return false;
+        }
+
+        user.waypointsList.remove(waypointToRemove);
         this.sendPacket(new PacketRemoveWaypoint(waypointToRemove), playerToRemoveWaypoint);
+        return true;
     }
 
-    public void removeWaypoint(Player playerToRemoveWaypoint, String waypointName) {
-        this.sendPacket(new PacketRemoveWaypoint(waypointName), playerToRemoveWaypoint);
+    public boolean removeWaypoint(Player playerToRemoveWaypoint, String waypointName, Dimension dimension) {
+        User user = this.getUserFromPlayer(playerToRemoveWaypoint);
+        if (user == null) {
+            System.err.println("Couldn't remove a waypoint from " + playerToRemoveWaypoint.getName() + " because they aren't using CheatBonker");
+            return false;
+        }
+        String dimensionName = dimension.getDimensionName();
+
+        for (int i = 0; i < user.waypointsList.size(); i++) {
+            Waypoint waypoint = user.waypointsList.get(i);
+            if (waypoint.getName().equals(waypointName) && waypoint.getDimensionName().equals(dimensionName)) {
+                user.waypointsList.remove(waypoint);
+            }
+        }
+        this.sendPacket(new PacketRemoveWaypoint(waypointName, dimensionName), playerToRemoveWaypoint);
+        return true;
     }
 
-    public User getUserFromPlayer(Player player) {
+    private User getUserFromPlayer(Player player) {
         for (User user : this.playersRunningCheatBonker) {
             if (user.getPlayerUUID() == player.getUniqueId()) {
                 return user;
@@ -104,7 +155,7 @@ public class CheatBonkerAPI implements Listener {
         return null;
     }
 
-    public User getUserFromUUID(UUID uuid) {
+    private User getUserFromUUID(UUID uuid) {
         for (User user : this.playersRunningCheatBonker) {
             if (user.getPlayerUUID() == uuid) {
                 return user;
@@ -113,19 +164,19 @@ public class CheatBonkerAPI implements Listener {
         return null;
     }
 
-    public void addPlayerToRunningCheatBonker(Player player) {
+    private void addPlayerToRunningCheatBonker(Player player) {
         this.playersRunningCheatBonker.add(new User(player.getUniqueId()));
     }
 
-    public void addPlayerToRunningCheatBonker(UUID uuid) {
+    private void addPlayerToRunningCheatBonker(UUID uuid) {
         this.playersRunningCheatBonker.add(new User(uuid));
     }
 
-    public void removePlayerFromRunningCheatBonker(Player player) {
+    private void removePlayerFromRunningCheatBonker(Player player) {
         this.playersRunningCheatBonker.remove(this.getUserFromPlayer(player));
     }
 
-    public void removePlayerFromRunningCheatBonker(UUID uuid) {
+    private void removePlayerFromRunningCheatBonker(UUID uuid) {
         this.playersRunningCheatBonker.remove(this.getUserFromUUID(uuid));
     }
 
@@ -148,12 +199,12 @@ public class CheatBonkerAPI implements Listener {
     }
 
     @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
+    private void onPlayerQuit(PlayerQuitEvent event) {
         this.removePlayerFromRunningCheatBonker(event.getPlayer());
     }
 
     @EventHandler
-    public void onPlayerRegisterChannel(PlayerRegisterChannelEvent event) {
+    private void onPlayerRegisterChannel(PlayerRegisterChannelEvent event) {
         if ("CheatBonker".equals(event.getChannel()) == true) {
             System.out.println(event.getPlayer().getName() + " is using ceheratobnker!!1111!");
             this.addPlayerToRunningCheatBonker(event.getPlayer());

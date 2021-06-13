@@ -20,5 +20,6 @@ public class PacketAddWaypoint extends Packet {
         this.buf.writeInt(this.waypoint.getY());
         this.buf.writeInt(this.waypoint.getZ());
         this.writeColor(this.waypoint.getColor());
+        this.writeString(this.waypoint.getDimensionName());
     }
 }

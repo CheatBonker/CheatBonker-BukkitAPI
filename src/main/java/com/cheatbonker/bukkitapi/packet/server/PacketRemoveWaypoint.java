@@ -5,13 +5,16 @@ import com.cheatbonker.bukkitapi.waypoints.Waypoint;
 
 public class PacketRemoveWaypoint extends Packet {
     private String waypointName;
+    private String dimensionName;
 
     public PacketRemoveWaypoint(Waypoint waypoint) {
         this.waypointName = waypoint.getName();
+        this.dimensionName = waypoint.getDimensionName();
     }
 
-    public PacketRemoveWaypoint(String waypointName) {
+    public PacketRemoveWaypoint(String waypointName, String dimensionName) {
         this.waypointName = waypointName;
+        this.dimensionName = dimensionName;
     }
 
     @Override
@@ -20,5 +23,7 @@ public class PacketRemoveWaypoint extends Packet {
         this.buf.writeInt(1);
         //waypoint id
         this.writeString(this.waypointName);
+        //waypoint dimension
+        this.writeString(this.dimensionName);
     }
 }
