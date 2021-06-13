@@ -1,16 +1,12 @@
-import com.cheatbonker.bukkitapi.waypoints.Waypoint;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.awt.*;
-
-public class WaypointTestCommand implements CommandExecutor {
+public class WaypointRemoveTestCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        CheatBonkerBukkitAPI.apiInstance.addWaypoint((Player) sender, new Waypoint("An example waypoint", 420, 69, 420, new Color(0, 169, 169)));
-
+        CheatBonkerBukkitAPI.apiInstance.removeWaypoint((Player) sender, "An example waypoint");
         return true;
     }
 }

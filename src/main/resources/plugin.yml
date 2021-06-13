@@ -7,3 +7,5 @@ depend: [ ProtocolLib ]
 commands:
   waypointtest:
     description: test waypoint command for cheatbonker bukkit api
+  waypointremovetest:
+    description: fjdsiujfdiogjdfi

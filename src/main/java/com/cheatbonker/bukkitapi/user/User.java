@@ -1,5 +1,6 @@
 package com.cheatbonker.bukkitapi.user;
 
+import com.cheatbonker.bukkitapi.module.CheatBonkerModule;
 import com.cheatbonker.bukkitapi.waypoints.Waypoint;
 
 import java.util.ArrayList;
@@ -8,20 +9,15 @@ import java.util.UUID;
 
 public class User {
     private UUID playerUUID;
-    private boolean staffModulesStatus = false;
+    public boolean staffModulesStatus;
     public List<Waypoint> waypointsList;
+    public List<CheatBonkerModule> disallowedModules;
 
     public User(UUID playerUUID) {
         this.playerUUID = playerUUID;
+        this.staffModulesStatus = false;
         this.waypointsList = new ArrayList<>();
-    }
-
-    public void setStaffModulesStatus(boolean enabled) {
-        this.staffModulesStatus = enabled;
-    }
-
-    public boolean getStaffModulesStatus() {
-        return this.staffModulesStatus;
+        this.disallowedModules = new ArrayList<>();
     }
 
     public UUID getPlayerUUID() {

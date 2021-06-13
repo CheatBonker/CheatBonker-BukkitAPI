@@ -7,7 +7,7 @@ public enum CheatBonkerModule {
     FULLBRIGHT(2),
     WAYPOINTS(3);
 
-    private int id;
+    private final int id;
 
     CheatBonkerModule(int id) {
         this.id = id;
