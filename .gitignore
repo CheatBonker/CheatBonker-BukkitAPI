@@ -111,8 +111,3 @@ buildNumber.properties
 
 # Common working directory
 run/
-
-# Test plugin
-src/main/java/CheatBonkerBukkitAPI.java
-src/main/java/WaypointTestCommand.java
-src/main/resources/
