@@ -1,0 +1,9 @@
+name: CheatBonker-BukkitAPI
+version: ${project.version}
+main: CheatBonkerBukkitAPI
+load: STARTUP
+authors: [ Premiering ]
+depend: [ ProtocolLib ]
+commands:
+  waypointtest:
+    description: test waypoint command for cheatbonker bukkit api
