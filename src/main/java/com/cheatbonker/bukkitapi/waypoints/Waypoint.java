@@ -5,9 +5,10 @@ import com.cheatbonker.bukkitapi.dimension.Dimension;
 import java.awt.*;
 
 public class Waypoint {
-    private String name, dimensionName;
-    private int x, y, z;
-    private Color color;
+    private final String name;
+    private final String dimensionName;
+    private final int x, y, z;
+    private final Color color;
 
     public Waypoint(String name, Dimension dimension, int x, int y, int z, Color color) {
         this.name = name;

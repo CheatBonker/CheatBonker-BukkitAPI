@@ -21,7 +21,7 @@ public class PacketRemoveWaypoint extends Packet {
     public void write() {
         //packet id
         this.buf.writeInt(1);
-        //waypoint id
+        //waypoint name
         this.writeString(this.waypointName);
         //waypoint dimension
         this.writeString(this.dimensionName);

@@ -24,10 +24,10 @@ import java.util.stream.Collectors;
 public class CheatBonkerAPI implements Listener {
     //list of players running cheatbonker
     private final List<User> playersRunningCheatBonker;
-    //plugin instance, used when sending packets to the player
+    //plugin instance, used when sending packets to players
     private final Plugin plugin;
     //handles all incoming packets
-    public CBNetHandler netHandler;
+    private final CBNetHandler netHandler;
 
     //initialize crap and register plugin channel and events
     public CheatBonkerAPI(Plugin plugin) {
@@ -143,8 +143,15 @@ public class CheatBonkerAPI implements Listener {
         return true;
     }
 
-    public void sendNotification(Player playerToSendNotification, String title, String description, long length) {
+    public boolean sendNotification(Player playerToSendNotification, String title, String description, long length) {
+        User user = this.getUserFromPlayer(playerToSendNotification);
+        if (user == null) {
+            System.err.println("Couldn't send a notification to " + playerToSendNotification.getName() + " because they aren't using CheatBonker");
+            return false;
+        }
+
         this.sendPacket(new PacketSendNotification(title, description, length), playerToSendNotification);
+        return true;
     }
 
     private User getUserFromPlayer(Player player) {
@@ -197,6 +204,22 @@ public class CheatBonkerAPI implements Listener {
             }
         }
         return false;
+    }
+
+    public boolean doesPlayerHaveStaffModules(Player player) {
+        User user = this.getUserFromPlayer(player);
+        if (user == null) {
+            return false;
+        }
+        return user.staffModulesStatus;
+    }
+
+    public boolean doesPlayerHaveStaffModules(UUID uuid) {
+        User user = this.getUserFromUUID(uuid);
+        if (user == null) {
+            return false;
+        }
+        return user.staffModulesStatus;
     }
 
     @EventHandler

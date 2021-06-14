@@ -9,7 +9,6 @@ import java.awt.*;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class Packet {
     //packets in the server package are packets that are being sent from the server
@@ -39,28 +38,9 @@ public class Packet {
         return this.buf.readBytes(length).toString(StandardCharsets.UTF_8);
     }
 
-    public void writeIntArray(int[] arr) {
-        byte[] byteArr = this.intArrToBytes(arr);
-        this.buf.writeInt(byteArr.length);
-        this.buf.writeBytes(byteArr);
-    }
-
     public void writeColor(Color color) {
         this.buf.writeInt(color.getRed());
         this.buf.writeInt(color.getGreen());
         this.buf.writeInt(color.getBlue());
-    }
-
-    public UUID readUUID() {
-        return new UUID(this.buf.readLong(), this.buf.readLong());
-    }
-
-    //thanks stack overflow
-    private byte[] intArrToBytes(int[] data) {
-        byte[] bytes = new byte[data.length];
-        for (int i = 0; i < bytes.length; i++) {
-            bytes[i] = (byte) data[i];
-        }
-        return bytes;
     }
 }
