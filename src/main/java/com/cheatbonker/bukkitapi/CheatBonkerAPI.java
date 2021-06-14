@@ -3,10 +3,7 @@ package com.cheatbonker.bukkitapi;
 import com.cheatbonker.bukkitapi.dimension.Dimension;
 import com.cheatbonker.bukkitapi.module.CheatBonkerModule;
 import com.cheatbonker.bukkitapi.packet.Packet;
-import com.cheatbonker.bukkitapi.packet.server.PacketAddWaypoint;
-import com.cheatbonker.bukkitapi.packet.server.PacketDisallowedModules;
-import com.cheatbonker.bukkitapi.packet.server.PacketRemoveWaypoint;
-import com.cheatbonker.bukkitapi.packet.server.PacketStaffModulesStatus;
+import com.cheatbonker.bukkitapi.packet.server.*;
 import com.cheatbonker.bukkitapi.user.User;
 import com.cheatbonker.bukkitapi.waypoints.Waypoint;
 import io.netty.buffer.ByteBuf;
@@ -144,6 +141,10 @@ public class CheatBonkerAPI implements Listener {
         }
         this.sendPacket(new PacketRemoveWaypoint(waypointName, dimensionName), playerToRemoveWaypoint);
         return true;
+    }
+
+    public void sendNotification(Player playerToSendNotification, String title, String description, long length) {
+        this.sendPacket(new PacketSendNotification(title, description, length), playerToSendNotification);
     }
 
     private User getUserFromPlayer(Player player) {
