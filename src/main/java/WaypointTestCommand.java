@@ -10,9 +10,7 @@ import java.awt.*;
 public class WaypointTestCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        CheatBonkerBukkitAPI.apiInstance.addWaypoint((Player) sender, new Waypoint("Overworld waypoint", Dimension.OVERWORLD, 420, 69, 420, new Color(0, 169, 169)));
-        CheatBonkerBukkitAPI.apiInstance.addWaypoint((Player) sender, new Waypoint("Nether waypoint", Dimension.NETHER, 420, 69, 420, new Color(0, 169, 169)));
-        CheatBonkerBukkitAPI.apiInstance.addWaypoint((Player) sender, new Waypoint("The End waypoint", Dimension.THE_END, 420, 69, 420, new Color(0, 169, 169)));
+        CheatBonkerBukkitAPI.apiInstance.addWaypoint((Player) sender, new Waypoint(args[0], Dimension.OVERWORLD, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), new Color(Integer.parseInt(args[4]))));
 
         return true;
     }

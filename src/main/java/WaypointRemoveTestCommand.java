@@ -7,9 +7,7 @@ import org.bukkit.entity.Player;
 public class WaypointRemoveTestCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        CheatBonkerBukkitAPI.apiInstance.removeWaypoint((Player) sender, "Overworld waypoint", Dimension.OVERWORLD);
-        CheatBonkerBukkitAPI.apiInstance.removeWaypoint((Player) sender, "Nether waypoint", Dimension.NETHER);
-        CheatBonkerBukkitAPI.apiInstance.removeWaypoint((Player) sender, "The End waypoint", Dimension.THE_END);
+        CheatBonkerBukkitAPI.apiInstance.removeWaypoint((Player) sender, args[0], Dimension.OVERWORLD);
         return true;
     }
 }

@@ -7,7 +7,7 @@ public class StaffModulesTestCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Player p = (Player) sender;
-        CheatBonkerBukkitAPI.apiInstance.setStaffModulesStatus(p, true);
+        CheatBonkerBukkitAPI.apiInstance.setStaffModulesStatus(p, Boolean.parseBoolean(args[0]));
         return true;
     }
 }
