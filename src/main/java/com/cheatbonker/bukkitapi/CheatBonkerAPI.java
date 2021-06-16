@@ -18,9 +18,13 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.messaging.Messenger;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
+//my ocd needs this
+@SuppressWarnings("all")
 public class CheatBonkerAPI implements Listener {
     //list of players running cheatbonker
     private final List<User> playersRunningCheatBonker;
@@ -108,6 +112,19 @@ public class CheatBonkerAPI implements Listener {
             return false;
         }
 
+        user.waypointsList.add(waypoint);
+        this.sendPacket(new PacketAddWaypoint(waypoint), playerToAddWaypoint);
+        return true;
+    }
+
+    public boolean addWaypoint(Player playerToAddWaypoint, String name, Dimension dimension, int x, int y, int z, Color color) {
+        User user = this.getUserFromPlayer(playerToAddWaypoint);
+        if (user == null) {
+            System.err.println("Couldn't add a waypoint to " + playerToAddWaypoint.getName() + " because they aren't using CheatBonker");
+            return false;
+        }
+
+        Waypoint waypoint = new Waypoint(name, dimension, x, y, z, color);
         user.waypointsList.add(waypoint);
         this.sendPacket(new PacketAddWaypoint(waypoint), playerToAddWaypoint);
         return true;
