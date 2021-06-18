@@ -1,6 +1,7 @@
 package com.cheatbonker.bukkitapi;
 
 import com.cheatbonker.bukkitapi.dimension.Dimension;
+import com.cheatbonker.bukkitapi.event.CheatBonkerRegisterEvent;
 import com.cheatbonker.bukkitapi.module.CheatBonkerModule;
 import com.cheatbonker.bukkitapi.packet.Packet;
 import com.cheatbonker.bukkitapi.packet.server.*;
@@ -11,6 +12,7 @@ import io.netty.buffer.Unpooled;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRegisterChannelEvent;
@@ -239,16 +241,17 @@ public class CheatBonkerAPI implements Listener {
         return user.staffModulesStatus;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     private void onPlayerQuit(PlayerQuitEvent event) {
         this.removePlayerFromRunningCheatBonker(event.getPlayer());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     private void onPlayerRegisterChannel(PlayerRegisterChannelEvent event) {
         if ("CheatBonker".equals(event.getChannel()) == true) {
-            System.out.println(event.getPlayer().getName() + " is using ceheratobnker!!1111!");
             this.addPlayerToRunningCheatBonker(event.getPlayer());
+            CheatBonkerRegisterEvent registerEvent = new CheatBonkerRegisterEvent(event.getPlayer());
+            Bukkit.getServer().getPluginManager().callEvent(registerEvent);
         }
     }
 
