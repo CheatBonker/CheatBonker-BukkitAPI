@@ -173,6 +173,17 @@ public class CheatBonkerAPI implements Listener {
         return true;
     }
 
+    public boolean sendDiscordRPServerInfo(Player player, String serverInfo) {
+        User user = this.getUserFromPlayer(player);
+        if (user == null) {
+            System.err.println("Couldn't send a notification to " + player.getName() + " because they aren't using CheatBonker");
+            return false;
+        }
+
+        this.sendPacket(new PacketDiscordRPServerInfo(serverInfo), player);
+        return true;
+    }
+
     private User getUserFromPlayer(Player player) {
         for (User user : this.playersRunningCheatBonker) {
             if (user.getPlayerUUID() == player.getUniqueId()) {

@@ -1,0 +1,12 @@
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+public class ServerInfoTestCommand implements CommandExecutor {
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        CheatBonkerBukkitAPI.apiInstance.sendDiscordRPServerInfo((Player) sender, args[0]);
+        return true;
+    }
+}

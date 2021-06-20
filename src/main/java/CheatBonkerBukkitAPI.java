@@ -20,6 +20,7 @@ public final class CheatBonkerBukkitAPI extends JavaPlugin implements Listener {
         getServer().getPluginCommand("staffmodulestest").setExecutor(new StaffModulesTestCommand());
         getServer().getPluginCommand("disallowedmodulestest").setExecutor(new DisallowedModulesTestCommand());
         getServer().getPluginCommand("notificationtest").setExecutor(new NotificationTestCommand());
+        getServer().getPluginCommand("serverinfotest").setExecutor(new ServerInfoTestCommand());
         getServer().getPluginManager().registerEvents(this, this);
     }
 
